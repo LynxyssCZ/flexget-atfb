@@ -1,3 +1,5 @@
+'use strict';
+
 var register = function(server, options, next) {
 	next();
 };
