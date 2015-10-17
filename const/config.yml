@@ -1,0 +1,86 @@
+secrets: secrets.yml
+
+templates:
+  transmission series:
+    transmission:
+      host: 192.168.253.52
+      port: 9091
+      username: '{{ secrets.tr.usr }}'
+      password: '{{ secrets.tr.pwd }}'
+      path: '{{ secrets.tr.root }}'
+    set:
+      path: '{{ secrets.tr.root }}/{{ series_name }}'
+      label: 'FlexGet series - {{ series_name }}'
+
+  ongoings:
+    include: series.yml
+    set:
+      from_group:
+        - Commie
+
+  alternate names:
+    series:
+      - 'Kidou Senshi Gundam: Tekketsu no Orphans':
+          alternate_name:
+            - 'Mobile Suit Gundam - Iron-Blooded Orphans'
+
+  fix quality:
+    if:
+      - "'720p' not in quality":
+          set:
+            quality: 720p
+
+
+  horrible quality:
+    if:
+      - "all(['horriblesubs' in from_group,any(['480p' in quality,'1080p' in quality])])": reject
+      - "all(['horriblesubs' in from_group,'720p' in quality])":
+          set:
+            quality: 480p
+
+tasks:
+  fetch nyaa:
+    priority: 2
+    template:
+      - ongoings
+      - fix quality
+      - transmission series
+    rss:
+      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+-horriblesubs+-1080p+-480p+-dvdrip+-%22bd%22&filter=2'
+      all_entries: no
+
+  fetch horrible:
+    priority: 5
+    template:
+      - ongoings
+      - horrible quality
+      - transmission series
+    rss:
+      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+horriblesubs+-1080p+-480p&filter=2'
+      all_entries: no
+
+  discover nyaa:
+    priority: 10
+    template:
+      - ongoings
+      - horrible quality
+      - fix quality
+      - transmission series
+    discover:
+      what:
+        - emit_series:
+            from_start: yes
+            backfill: yes
+      from:
+        - nyaa:
+            category: anime eng
+            filter: trusted only
+
+schedules:
+  - tasks: [fetch nyaa, fetch horrible]
+    interval:
+      minutes: 30
+
+  - tasks: discove nyaa
+    interval:
+      hours: 8

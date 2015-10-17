@@ -21,6 +21,7 @@
     "bluebird": "^2.10.2",
     "dotenv": "^1.2.0",
     "request": "^2.65.0",
+    "shelljs": "^0.5.3",
     "yamljs": "^0.2.4"
   }
 }
