@@ -16,7 +16,7 @@ start();
 function start() {
 	refreshInterval = setInterval(refresh, process.env.UPDATE_PERIOD);
 	refresh();
-	//Shell.exec('flexget daemon start -d');
+	Shell.exec('flexget daemon start -d');
 }
 
 function stop() {
@@ -107,7 +107,11 @@ function generateYaml(list) {
 			anime: series,
 			settings: {
 				anime: {
-					identified_by: 'sequence'
+					identified_by: 'sequence',
+					upgrade: 'yes',
+					timeframe: '6 hours',
+					target: '720p',
+					qualities: ['480p', '720p']
 				}
 			}
 		}

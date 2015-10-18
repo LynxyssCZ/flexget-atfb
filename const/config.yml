@@ -14,27 +14,18 @@ templates:
 
   ongoings:
     include: series.yml
-    set:
-      from_group:
-        - Commie
-
-  alternate names:
-    series:
-      - 'Kidou Senshi Gundam: Tekketsu no Orphans':
-          alternate_name:
-            - 'Mobile Suit Gundam - Iron-Blooded Orphans'
 
   fix quality:
     if:
-      - "'720p' not in quality":
+      - "not quality":
           set:
             quality: 720p
 
 
   horrible quality:
     if:
-      - "all(['horriblesubs' in from_group,any(['480p' in quality,'1080p' in quality])])": reject
-      - "all(['horriblesubs' in from_group,'720p' in quality])":
+      - "all(['HoribleSubs' in title,any(['480p' in title,'1080p' in title])])": reject
+      - "all(['HoribleSubs' in title,'720p' in quality])":
           set:
             quality: 480p
 
