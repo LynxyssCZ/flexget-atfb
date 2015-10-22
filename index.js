@@ -111,7 +111,7 @@ function generateYaml(list) {
 					upgrade: 'yes',
 					timeframe: '6 hours',
 					target: '720p',
-					qualities: ['480p', '720p']
+					qualities: ['576p', '720p']
 				}
 			}
 		}

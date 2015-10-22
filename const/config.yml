@@ -24,10 +24,12 @@ templates:
 
   horrible quality:
     if:
-      - "all(['HoribleSubs' in title,any(['480p' in title,'1080p' in title])])": reject
-      - "all(['HoribleSubs' in title,'720p' in quality])":
+      - "all(['HorribleSubs' in title,'1080p' in quality])":
           set:
             quality: 480p
+      - "all(['HorribleSubs' in title,'720p' in quality])":
+          set:
+            quality: 576p
 
 tasks:
   fetch nyaa:
