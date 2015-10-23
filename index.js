@@ -5,10 +5,11 @@ var Yaml = require('yamljs');
 var fs = Bluebird.promisifyAll(require('fs'));
 var ATFB = require('./src');
 var Shell = require('shelljs');
+var hash = require('es-hash');
 
 var usersString = process.env.USERS;
 var shortNames = process.env.SHORT_NAMES.split(';');
-var lastYaml;
+var lastHash;
 var refreshInterval;
 
 start();
@@ -31,19 +32,20 @@ function refresh() {
 	Bluebird.map(usersString.split(';'), readList)
 	.reduce(normalizeList, Object.create(null))
 	.then(generateYaml)
-	.then(function(yaml) {
-		if (yaml !== lastYaml) {
-			lastYaml = yaml;
-			return updateConfig(yaml);
+	.spread(function(yaml, hash) {
+		if (hash !== lastHash) {
+			lastHash = hash;
+			return fs.writeFileAsync(process.env.SERIES_FILE, yaml);
+		}
+		else {
+			return 'No update';
 		}
 	})
-	.then(function() {
-		Shell.exec('flexget daemon reload');
+	.then(function(err) {
+		if (!err) {
+			Shell.exec('flexget daemon reload');
+		}
 	});
-}
-
-function updateConfig(newYaml) {
-	return fs.writeFileAsync(process.env.SERIES_FILE, newYaml);
 }
 
 function normalizeList(items, list) {
@@ -102,7 +104,7 @@ function generateYaml(list) {
 		}
 	});
 
-	return Yaml.stringify({
+	var object = {
 		series: {
 			anime: series,
 			settings: {
@@ -115,5 +117,7 @@ function generateYaml(list) {
 				}
 			}
 		}
-	}, 2);
+	};
+
+	return [Yaml.stringify(object, 2), hash(object)];
 }

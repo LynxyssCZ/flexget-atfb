@@ -1,10 +1,9 @@
 'use strict';
 var Promise = require('bluebird');
 var Request = Promise.promisify(require("request"));
-var UrlLib = require('url');
 
-var LISTS = ['watching']
-var SERVER = 'https://anilist.co/api/'
+var LISTS = ['watching'];
+var SERVER = 'https://anilist.co/api/';
 
 module.exports.read = function read(user, callback) {
 	return getToken()
