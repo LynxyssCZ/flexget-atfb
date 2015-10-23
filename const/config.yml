@@ -74,6 +74,6 @@ schedules:
     interval:
       minutes: 30
 
-  - tasks: discove nyaa
+  - tasks: discover nyaa
     interval:
       hours: 8
