@@ -1,6 +1,22 @@
 secrets: secrets.yml
 
 templates:
+  global:
+    # configuration of email parameters
+    # -> each feed will send an email with the accepted entries
+    # -> can be disabled per feed with email: active: False
+    email:
+      active: True
+      from: {{ secrets.mail.from }}
+      to: {{ secrets.mail.to }}
+      smtp_host: smtp.gmail.com
+      smtp_port: 587
+      smtp_login: true
+      smtp_username: {{ secrets.mail.user }}
+      smtp_password: {{ secret.mail.pass }}
+      smtp_tls: true
+      template: html
+
   transmission series:
     transmission:
       host: 192.168.253.52
