@@ -13,7 +13,7 @@ templates:
       smtp_port: 587
       smtp_login: true
       smtp_username: '{{ secrets.mail.user }}'
-      smtp_password: '{{ secret.mail.pass }}'
+      smtp_password: '{{ secrets.mail.pass }}'
       smtp_tls: true
       template: html
 
