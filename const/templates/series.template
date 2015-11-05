@@ -110,8 +110,8 @@ div.clear {
 			<!-- HANDLE SERIES -->
 			{% if series.grouper is defined %}
 				<div class="series">
-					{% for entry in series.list | first %}
-						<h2>{{ entry.series_name }}</h1>
+					{% for entry in series.list|select('first') %}
+						<h2>{{ entry.series_name }}</h2>
 						{% if entry.tvdb_banner_url|d(false) %}
 							<div class="banner">
 								<img src="{{ entry.tvdb_banner_url }}" alt="{{ entry.series_name }}" title="{{ entry.series_name }}">
@@ -122,10 +122,10 @@ div.clear {
 					<ul class="episodes-list">
 					{% for episode in series.list %}
 						<li class="episode">
-							{% if episode.tvdb_ep_name is defined and episode.series_episode %}
-							<div class="ep_name">{{ '(number)s - (name)s'|format(number=episode.series_episode, name=tvdb_ep_name) }}</div>
+							{% if episode.tvdb_ep_name is defined and episode.series_id is defined %}
+							<div class="ep_name">{{ '%(number)s - %(name)s'|format(number=episode.series_id, name=tvdb_ep_name) }}</div>
 							{% endif %}
-							<div class="ep_title">{{ '(title)s'|format(title=episode.title) }}</div>
+							<div class="ep_title">{{ '%(title)s'|format(title=episode.title) }}</div>
 						</li>
 					{% endfor %}
 					</ul>
