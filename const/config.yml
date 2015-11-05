@@ -78,6 +78,7 @@ tasks:
     disable:
       - seen
       - seen_info_hash
+      - torrent
     accept_all: yes
     email:
       from: '{{ secrets.mail.user }}'
