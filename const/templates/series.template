@@ -124,7 +124,7 @@ div.clear {
 					{% for episode in series.list %}
 						<li class="episode">
 							{% if episode.tvdb_ep_name is defined and episode.series_id is defined %}
-							<div class="ep_name">{{ '%(number)s - %(name)s'|format(number=episode.series_id, name=tvdb_ep_name) }}</div>
+							<div class="ep_name">{{ '%(number)s - %(name)s'|format(number=episode.series_id, name=episode.tvdb_ep_name) }}</div>
 							{% endif %}
 							<div class="ep_title">{{ '%(title)s'|format(title=episode.title) }}</div>
 						</li>
