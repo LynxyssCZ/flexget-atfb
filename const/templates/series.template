@@ -1,0 +1,144 @@
+{% if task.accepted -%}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<style type="text/css">
+body {
+	background: #000;
+	font-family: Tahoma;
+}
+
+div#main {
+	margin:0px auto 0px auto;
+	width:780px;
+}
+
+/* SERIES */
+div.series, div.movie, div.other {
+	border: 2px solid #FE7C32;
+	margin-bottom: 0.5em;
+	padding: 0.5em;
+	-moz-border-radius: 5px;
+	background: #fff;
+}
+div.series h1, div.movie h1, div.other h1 {
+	margin: 0;
+}
+div.series div.banner {
+	text-align:center;
+}
+div.series div.basic {
+	padding: 0.5em;
+	background: #E0E0E0;
+}
+div.season_ep {
+	float: right;
+}
+div.ep_name {
+	float: left;
+	font-weight: bold;
+}
+div.ep_rating {
+   float: left;
+}
+div.ep_director {
+	float: right;
+}
+div.details-button {
+	text-align: center;
+}
+div.genres, div.overview {
+	background: #F7F7F7;
+	padding: 0.4em;
+}
+div.genres, div.overview {
+	font-size: 0.9em;
+}
+div.genres h2, div.overview h2
+{
+	font-size: 1em;
+	margin-top: 0;
+	margin-bottom: 0.5em;
+	color: #366D9C;
+}
+div.overview p {
+	padding: 0;
+	margin: 0;
+}
+div.genres ul {
+	list-style: none; margin: 0; padding: 0;
+}
+div.genres ul li {
+	display: inline;
+}
+div.genres li:after {
+	content: ",";
+}
+div.genres li:last-child:after {
+	content: "";
+}
+a {
+	color: #366D9C;
+}
+a:hover {
+	color: #f00;
+}
+div.clear {
+	clearing: both;
+}
+		</style>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>ATFB - FlexGet digest</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function toggle_visibility(c_id, id) {
+			   var e = document.getElementById(id);
+			   if(e.style.display == 'block')
+				  e.style.display = 'none';
+			   else
+				  e.style.display = 'block';
+			   var c = document.getElementById(c_id);
+			   c.style.display = 'none';
+			}
+		</script>
+
+		<h1>Digest</h1>
+		<div id="main">
+		{% for series in task.accepted|groupby('series_name') %}
+			<!-- HANDLE SERIES -->
+			{% if series.grouper is defined %}
+				<div class="series">
+					{% for entry in group.list | first %}
+						<h2>{{ entry.series_name }}</h1>
+						{% if entry.tvdb_banner_url|d(false) %}
+							<div class="banner">
+								<img src="{{ entry.tvdb_banner_url }}" alt="{{ entry.series_name }}" title="{{ entry.series_name }}">
+							</div>
+						{% endif %}
+					{% endfor %}
+					<h3>Episodes</h3>
+					<ul class="episodes-list">
+					{% for episode in group.list %}
+						<li class="episode">
+							{% if episode.tvdb_ep_name is defined and episode.series_episode %}
+							<div class="ep_name">{{ '(number)s - (name)s'|format(number=episode.series_episode, name=tvdb_ep_name) }}</div>
+							{% endif %}
+							<div class="ep_title">{{ '(title)s'|format(title=episode.title) }}</div>
+						</li>
+					{% endfor %}
+					</ul>
+				</div>
+			{% else %}
+				<hr></hr>
+				<h2>Others</h1>
+				{% for entry in group.list %}
+
+				{% endfor %}
+			{% endif %}
+		{% endfor %}
+		</div>
+	</body>
+</html>
+{% endif %}

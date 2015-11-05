@@ -1,16 +1,5 @@
 secrets: secrets.yml
 
-email:
-  active: True
-  from: '{{ secrets.mail.user }}'
-  to: '{{ secrets.mail.to }}'
-  smtp_host: 'smtp.mailgun.com'
-  smtp_login: true
-  smtp_username: '{{ secrets.mail.user }}'
-  smtp_password: '{{ secrets.mail.pass }}'
-  smtp_tls: true
-  template: html
-
 templates:
   transmission series:
     transmission:
@@ -25,6 +14,8 @@ templates:
 
   ongoings:
     include: series.yml
+    thetvdb_lookup: yes
+    digest: daily email
 
   fix quality:
     if:
@@ -80,10 +71,31 @@ tasks:
             category: anime eng
             filter: trusted only
 
+  mail digest:
+    priority: 20
+    emit_digest:
+      list: daily email
+    seen: local
+    accept_all: yes
+
+    email:
+      from: '{{ secrets.mail.user }}'
+      to: '{{ secrets.mail.to }}'
+      smtp_host: 'smtp.mailgun.com'
+      smtp_login: true
+      smtp_username: '{{ secrets.mail.user }}'
+      smtp_password: '{{ secrets.mail.pass }}'
+      smtp_tls: true
+      template: 'series.template'
+
 schedules:
   - tasks: [fetch nyaa, fetch horrible]
     interval:
       minutes: 30
+
+  - tasks: mail digest
+    interval:
+      hours: 1
 
   - tasks: discover nyaa
     interval:
