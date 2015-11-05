@@ -75,10 +75,10 @@ tasks:
     priority: 20
     emit_digest:
       list: daily email
-    seen: local
-    seen_info_hash: local
+    disable:
+      - seen
+      - seen_info_hash
     accept_all: yes
-
     email:
       from: '{{ secrets.mail.user }}'
       to: '{{ secrets.mail.to }}'
