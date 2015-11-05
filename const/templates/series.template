@@ -110,7 +110,7 @@ div.clear {
 			<!-- HANDLE SERIES -->
 			{% if series.grouper is defined %}
 				<div class="series">
-					{% for entry in group.list | first %}
+					{% for entry in series.list | first %}
 						<h2>{{ entry.series_name }}</h1>
 						{% if entry.tvdb_banner_url|d(false) %}
 							<div class="banner">
@@ -120,7 +120,7 @@ div.clear {
 					{% endfor %}
 					<h3>Episodes</h3>
 					<ul class="episodes-list">
-					{% for episode in group.list %}
+					{% for episode in series.list %}
 						<li class="episode">
 							{% if episode.tvdb_ep_name is defined and episode.series_episode %}
 							<div class="ep_name">{{ '(number)s - (name)s'|format(number=episode.series_episode, name=tvdb_ep_name) }}</div>
@@ -133,7 +133,7 @@ div.clear {
 			{% else %}
 				<hr></hr>
 				<h2>Others</h1>
-				{% for entry in group.list %}
+				{% for entry in series.list %}
 
 				{% endfor %}
 			{% endif %}
