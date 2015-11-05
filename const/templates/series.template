@@ -110,14 +110,15 @@ div.clear {
 			<!-- HANDLE SERIES -->
 			{% if series.grouper is defined %}
 				<div class="series">
-					{% for entry in series.list|select('first') %}
-						<h2>{{ entry.series_name }}</h2>
-						{% if entry.tvdb_banner_url|d(false) %}
-							<div class="banner">
-								<img src="{{ entry.tvdb_banner_url }}" alt="{{ entry.series_name }}" title="{{ entry.series_name }}">
-							</div>
-						{% endif %}
-					{% endfor %}
+					{% set first_entry = series.list|first %}
+
+					<h2>{{ first_entry.series_name }}</h2>
+					{% if first_entry.tvdb_banner_url|d(false) %}
+						<div class="banner">
+							<img src="{{ first_entry.tvdb_banner_url }}" alt="{{ first_entry.series_name }}" title="{{ first_entry.series_name }}">
+						</div>
+					{% endif %}
+
 					<h3>Episodes</h3>
 					<ul class="episodes-list">
 					{% for episode in series.list %}
