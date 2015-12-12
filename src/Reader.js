@@ -2,7 +2,7 @@
 var Promise = require('bluebird');
 var Request = Promise.promisify(require("request"));
 
-var LISTS = ['watching'];
+var LISTS = ['watching', 'plan to watch'];
 var SERVER = 'https://anilist.co/api/';
 
 module.exports.read = function read(user, callback) {
@@ -60,6 +60,7 @@ function getLists(user, token) {
 function parseEntry(item) {
 	return {
 		title: item.anime.title_romaji,
-		alternateTitle: item.anime.title_english
+		alternateTitle: item.anime.title_english,
+		synonyms: item.anime.synonyms
 	};
 }

@@ -62,6 +62,17 @@ function normalizeList(items, list) {
 			normalizedNames.push(shortName);
 		}
 
+
+		if (item.synonyms) {
+			var synonyms = item.synonyms.filter(function(synonym) {
+				return normalizedNames.indexOf(synonym) === -1;
+			});
+
+			if (synonyms.length < 0) {
+				normalizedNames = normalizedNames.concat(synonyms);
+			}
+		}
+
 		items[normalizedName] = normalizedNames;
 	});
 	return items;
