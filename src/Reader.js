@@ -19,9 +19,14 @@ module.exports.read = function read(user, callback) {
 	})
 	.then(function(lists) {
 		return lists.reduce(function(items, list) {
-			return items.concat(list.map(function(item) {
-				return parseEntry(item);
-			}));
+			if (list) {
+				return items.concat(list.map(function(item) {
+					return parseEntry(item);
+				}));
+			}
+			else {
+				return items;
+			}
 		}, []);
 	});
 };
