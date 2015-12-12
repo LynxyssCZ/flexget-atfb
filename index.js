@@ -63,12 +63,12 @@ function normalizeList(items, list) {
 		}
 
 
-		if (item.synonyms) {
+		if (item.synonyms && item.synonyms.length > 0) {
 			var synonyms = item.synonyms.filter(function(synonym) {
 				return normalizedNames.indexOf(synonym) === -1;
 			});
 
-			if (synonyms.length < 0) {
+			if (synonyms.length > 0) {
 				normalizedNames = normalizedNames.concat(synonyms);
 			}
 		}

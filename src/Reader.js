@@ -2,7 +2,7 @@
 var Promise = require('bluebird');
 var Request = Promise.promisify(require("request"));
 
-var LISTS = ['watching', 'plan to watch'];
+var LISTS = ['watching', 'plan_to_watch'];
 var SERVER = 'https://anilist.co/api/';
 
 module.exports.read = function read(user, callback) {
