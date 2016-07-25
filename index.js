@@ -122,7 +122,7 @@ function generateYaml(list) {
 				anime: {
 					identified_by: 'sequence',
 					upgrade: 'yes',
-					timeframe: '6 hours',
+					timeframe: '6 minutes',
 					target: '720p',
 					exact: 'yes',
 					qualities: ['576p', '720p']

@@ -42,7 +42,7 @@ tasks:
       - transmission series
     rss:
       url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+-horriblesubs+-1080p+-480p+-dvdrip+-%22bd%22&filter=2'
-      all_entries: no
+      all_entries: yes
 
   fetch horrible:
     priority: 5
@@ -52,7 +52,7 @@ tasks:
       - transmission series
     rss:
       url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+horriblesubs+-1080p+-480p&filter=2'
-      all_entries: no
+      all_entries: yes
 
   discover nyaa:
     priority: 10
@@ -99,6 +99,13 @@ schedules:
     interval:
       hours: 1
 
-  - tasks: discover nyaa
+  - tasks: nyaa discover
     interval:
-      hours: 8
+      hours: 12
+
+
+web_server:
+  bind: 0.0.0.0
+  port: 3539
+api: yes
+webui: yes
