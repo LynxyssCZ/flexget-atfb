@@ -32,6 +32,12 @@ templates:
       - "all(['HorribleSubs' in title,'720p' in quality])":
           set:
             quality: 576p
+      - "all(['BakedFish' in title,'720p' in quality])":
+          set:
+            quality: 576p
+      - "all(['BakedFish' in title,'1080p' in quality])":
+          set:
+            quality: 480p
 
 tasks:
   fetch nyaa:
@@ -51,7 +57,7 @@ tasks:
       - horrible quality
       - transmission series
     rss:
-      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+horriblesubs+-1080p+-480p&filter=2'
+      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+horriblesubs%7Cbakedfish+-1080p+-480p&filter=2'
       all_entries: yes
 
   discover nyaa:
@@ -99,7 +105,7 @@ schedules:
     interval:
       hours: 1
 
-  - tasks: nyaa discover
+  - tasks: discover nyaa
     interval:
       hours: 12
 
