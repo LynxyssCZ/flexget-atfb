@@ -1,71 +1,86 @@
 'use strict';
-var Promise = require('bluebird');
-var Request = Promise.promisify(require("request"));
+const superagent = require('superagent');
 
-var LISTS = ['watching', 'plan_to_watch'];
-var SERVER = 'https://anilist.co/api/';
+const SERVER = 'https://anilist.co/api/';
 
-module.exports.read = function read(user, callback) {
-	return getToken()
-	.then(function(token) {
-		return getLists(user, token);
-	})
-	.then(function(lists) {
-		return LISTS.map(function(list) {
-			if (lists.hasOwnProperty(list)) {
-				return lists[list];
-			}
+class AnilistReader {
+	constructor(app, options) {
+		this.app = app;
+		this.options = options;
+
+		this.app.addMethod('getUserList', (user, listTypes) => {
+			return this.authorize()
+				.then(() => {
+					return this.getUserList(user, listTypes);
+				});
 		});
-	})
-	.then(function(lists) {
-		return lists.reduce(function(items, list) {
-			if (list) {
-				return items.concat(list.map(function(item) {
-					return parseEntry(item);
-				}));
-			}
-			else {
-				return items;
-			}
-		}, []);
-	});
-};
 
-function getToken() {
-	return Request({
-		url: '/auth/access_token',
-		baseUrl: SERVER,
-		method: 'POST',
-		json: true,
-		body: {
-			grant_type: "client_credentials",
-			client_id: process.env.CLIENT_ID,
-			client_secret: process.env.API_KEY
+		this.app.addMethod('getAnimeData', (animeId) => {
+			return this.authorize()
+				.then(() => {
+					return this.getAnimeData(animeId);
+				});
+		});
+	}
+
+	getUserList(user, listTypes) {
+		return superagent.get(SERVER + 'user/' + user + '/animelist')
+			.accept('json')
+			.query({ access_token: this.accessToken })
+			.then((res) => {
+				return Promise.resolve(res.body.lists);
+			}, (err) => {
+				return Promise.reject(err);
+			})
+			.then((lists) => {
+				const itemList = listTypes.reduce((animeList, listName) => {
+					return animeList.concat(lists[listName] || []);
+				}, []);
+				return Promise.resolve(itemList);
+			});
+	}
+
+	getAnimeData(animeId) {
+		return superagent.get(SERVER + 'anime/' + animeId + '/page')
+			.accept('json')
+			.query({ access_token: this.accessToken })
+			.then((res) => {
+				return Promise.resolve(res.body);
+			}, (err) => {
+				return Promise.reject(err);
+			});
+	}
+
+	authorize() {
+		if (this.accessToken && this.authExp > Date.now() + 15 * 60 * 1000) {
+			return Promise.resolve(true);
 		}
-	}).get(1)
-	.then(function(body) {
-		return body.access_token;
-	});
+		else {
+			return this.getToken();
+		}
+	}
+
+	getToken() {
+		return superagent.post(SERVER + 'auth/access_token')
+			.accept('json')
+			.send({
+				grant_type: 'client_credentials',
+				client_id: this.options.clientId,
+				client_secret: this.options.apiKey
+			})
+			.then((res) => {
+				this.storeToken(res.body);
+
+				return Promise.resolve(true);
+			}, (err) => {
+				return Promise.reject(err);
+			});
+	}
+
+	storeToken(response) {
+		this.accessToken = response.access_token;
+		this.authExp = response.expires;
+	}
 }
 
-function getLists(user, token) {
-	return Request({
-		url: '/user/' + user + '/animelist',
-		qs: {
-			access_token: token
-		},
-		baseUrl: SERVER,
-		json: true
-	}).get(1)
-	.then(function(data) {
-		return data.lists;
-	});
-}
-
-function parseEntry(item) {
-	return {
-		title: item.anime.title_romaji,
-		alternateTitle: item.anime.title_english,
-		synonyms: item.anime.synonyms
-	};
-}
+module.exports = AnilistReader;
