@@ -60,7 +60,7 @@ tasks:
       - horrible quality
       - transmission series
     rss:
-      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+horriblesubs%7Cbakedfish+-1080p+-480p&filter=2'
+      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=horriblesubs%7Cbakedfish+-1080p+-480p&filter=2'
       all_entries: yes
 
   discover nyaa:
