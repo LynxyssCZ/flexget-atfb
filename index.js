@@ -2,23 +2,37 @@
 require('dotenv').load();
 
 const Async = require('async');
+const path = require('path');
 const bunyan = require('bunyan');
 
 const ATFB = require('./src');
-
 const log = bunyan.createLogger({name: 'ATFB', level: process.env.LOG_LEVEL});
 
 const app = new ATFB({
 	logger: log,
-	database: require('./knexfile.js'),
+	database: {
+		client: 'sqlite3',
+		connection: {
+			filename: path.join(__dirname, 'const', 'atfb.sqlite')
+		},
+		useNullAsDefault: false
+	},
 	reader: {
 		clientId: process.env.CLIENT_ID,
 		apiKey: process.env.API_KEY
+	},
+	flexget: {
+		filename: path.join(__dirname, process.env.SERIES_FILE),
+		command: 'flexget daemon reload'
 	}
 });
 
+let refreshInterval;
+
 const clear = function() {
 	app.stop(function() {
+		clearInterval(refreshInterval);
+		refreshInterval = null;
 		log.info('All Stopped');
 		log.info('The way is clear, exiting.');
 		process.exit();
@@ -37,30 +51,44 @@ const start = function() {
 		else {
 			log.info('All Started');
 			log.debug(app.getPluginTree());
-
-			app.methods.reader.getAnimeData('20992')
-				.then((data) => {
-					log.info('anime data', app.methods.parser.parseAnimeData(data));
-				})
-				.catch((err) => {
-					log.error(err);
-				});
-
-			app.methods.reader.getUserList(process.env.USER, ['watching', 'plan_to_watch'])
-				.then((list) => {
-					// log.info('List returned', app.methods.parser.parseUserList(list));
-				})
-				.catch((err) => {
-					log.error(err);
-				});
+			refresh();
+			refreshInterval = setInterval(refresh, process.env.UPDATE_PERIOD);
 		}
 	});
 };
 
+function refresh() {
+	app.methods.reader.getUserList(process.env.USER, ['watching', 'plan_to_watch'])
+		.then((list) => {
+			Async.map(list, processAnime, (err, seriesList) => {
+				if (!err) {
+					app.methods.flexget.updateConfig(seriesList, () => {
+
+					});
+				}
+			});
+		})
+		.catch((err) => {
+			log.error(err);
+		});
+}
+
+function processAnime(anime, next) {
+	const animeData = app.methods.seriesNameGenerator.generateNames(anime);
+
+	app.methods.registry.storeAnime(animeData, (error, animeRecord) => {
+		if (error) {
+			next(error);
+		}
+		else {
+			next(null, animeRecord);
+		}
+	});
+}
+
 process.on('SIGINT', clear);
 process.on('uncaughtException', function (err) {
 	log.error('Some unexpected error occured', err);
-	log.error(err.stack);
 	clear();
 });
 

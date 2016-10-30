@@ -27,3 +27,4 @@ build/Release
 node_modules
 .idea
 const/series.yml
+const/atfb.sqlite

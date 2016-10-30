@@ -1,10 +1,10 @@
 'use strict';
 module.exports = function register(Bookshelf, tableName) {
 	const Series = Bookshelf.Model.extend({
+		idAttribute: 'anilistId',
 		tableName: tableName,
-		hidden: ['id'],
 		names: function () {
-			return this.hasMany('SeriesName');
+			return this.hasMany('SeriesName', 'series_id');
 		}
 	});
 
@@ -13,10 +13,10 @@ module.exports = function register(Bookshelf, tableName) {
 	});
 
 	const tableCreate = function createTable(table) {
-		table.string('anilist_id').unique().primary();
+		table.integer('anilist_id').unique().primary();
 		table.string('name').unique();
 		table.integer('episodes');
-		table.integer('type');
+		table.integer('season');
 		table.integer('prequel_id');
 		table.string('image_url_lge');
 		table.timestamp('time');

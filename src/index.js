@@ -49,8 +49,12 @@ class ATFB extends RinCore {
 			class: require('./Reader'),
 			options: this.options.reader
 		}, {
-			name: 'parser',
-			class: require('./Parser')
+			name: 'seriesNameGenerator',
+			class: require('./SeriesNamesGenerator')
+		}, {
+			name: 'flexget',
+			class: require('./FlexgetConfigGenerator'),
+			options: this.options.flexget
 		}], next);
 	}
 }

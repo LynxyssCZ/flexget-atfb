@@ -36,7 +36,7 @@ class AnilistReader {
 				const itemList = listTypes.reduce((animeList, listName) => {
 					return animeList.concat(lists[listName] || []);
 				}, []);
-				return Promise.resolve(itemList);
+				return Promise.resolve(this.parseUserList(itemList));
 			});
 	}
 
@@ -48,6 +48,14 @@ class AnilistReader {
 				return Promise.resolve(res.body);
 			}, (err) => {
 				return Promise.reject(err);
+			})
+			.then((data) => {
+				if (data) {
+					return Promise.resolve(this.parseAnimeData(data));
+				}
+				else {
+					return Promise.reject('No data');
+				}
 			});
 	}
 
@@ -80,6 +88,81 @@ class AnilistReader {
 	storeToken(response) {
 		this.accessToken = response.access_token;
 		this.authExp = response.expires;
+	}
+
+	parseUserList(userList) {
+		return userList.map((listItem) => {
+			const anime = listItem.anime || {};
+			let names = [];
+
+			if (anime.title_english) {
+				names.push(anime.title_english);
+			}
+
+			if (anime.synonyms) {
+				names = names.concat(anime.synonyms);
+			}
+
+			return {
+				anilistId: anime.id,
+				name: anime.title_romaji,
+				japaneseName: anime.title_japanese,
+				alternativeNames: names,
+				listStatus: listItem.list_status,
+				type: anime.type,
+				updatedAt: anime.updated_at,
+				imageUrlLge: anime.image_url_lge,
+				totalEpisodes: anime.total_episodes,
+				airingStatus: anime.airing_status,
+				season: anime.season
+			};
+		});
+	}
+
+	parseAnimeData(animeData) {
+		let related = this.getRelated(animeData.relations);
+		let names = [];
+
+		if (animeData.title_english) {
+			names.push(animeData.title_english);
+		}
+
+		if (animeData.synonyms) {
+			names = names.concat(animeData.synonyms);
+		}
+
+		return {
+			anilistId: animeData.id,
+			name: animeData.title_romaji,
+			japaneseName: animeData.title_japanese,
+			alternativeNames: names,
+			type: animeData.type,
+			updatedAt: animeData.updated_at,
+			imageUrlLge: animeData.image_url_lge,
+			totalEpisodes: animeData.total_episodes,
+			airingStatus: animeData.airing_status,
+			season: animeData.season,
+			prequel: related.prequel,
+			sequel: related.sequel
+		};
+	}
+
+	getRelated(relations) {
+		return relations.reduce((related, anime) => {
+			if (anime.type === 'TV') {
+				if (anime.relation_type === 'prequel') {
+					related.prequel = anime.id;
+				}
+				else if (anime.relation_type === 'sequel') {
+					related.sequel = anime.id;
+				}
+			}
+
+			return related;
+		}, {
+			sequel: undefined,
+			prequel: undefined
+		});
 	}
 }
 

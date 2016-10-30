@@ -1,10 +1,10 @@
 'use strict';
 module.exports = function register(Bookshelf, tableName) {
 	const SeriesName = Bookshelf.Model.extend({
+		idAttribute: 'name',
 		tableName: tableName,
-		hidden: ['id'],
 		series: function () {
-			return this.belongsTo('Series');
+			return this.belongsTo('Series', 'series_id');
 		}
 	});
 
