@@ -15,7 +15,10 @@ templates:
   ongoings:
     include: series.yml
     thetvdb_lookup: yes
-    digest: daily email
+    digest:
+      list: daily email
+      state:
+        - accepted
 
   fix quality:
     if:
@@ -69,7 +72,7 @@ tasks:
       - transmission series
     discover:
       what:
-        - emit_series:
+        - next_series_episodes:
             from_start: yes
             backfill: yes
       from:
@@ -79,7 +82,7 @@ tasks:
 
   mail digest:
     priority: 20
-    emit_digest:
+    from_digest:
       list: daily email
     disable:
       - seen
@@ -113,5 +116,4 @@ schedules:
 web_server:
   bind: 0.0.0.0
   port: 3539
-api: yes
-webui: yes
+  web_ui: yes
