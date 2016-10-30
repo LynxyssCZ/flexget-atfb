@@ -30,7 +30,9 @@ class FlexgetConfigGenerator {
 	writeConfig(seriesConfig, next) {
 		fs.writeFile(this.options.filename, Yaml.stringify(seriesConfig, 10, 2), (err) => {
 			if (!err) {
-				Shell.exec(this.options.command, () => {
+				Shell.exec(this.options.command, {
+					silent: true
+				}, () => {
 					next();
 				});
 			}
