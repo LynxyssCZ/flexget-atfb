@@ -23,6 +23,7 @@ class SeriesNamesGenerator {
 		const namesSet = new Set();
 		const alternativeNames = [];
 
+		namesSet.add(seriesItem.name);
 		this.generateNameVariations(seriesItem.name)
 			.forEach(namesSet.add, namesSet);
 

@@ -70,7 +70,7 @@ class AnimeRegistry {
 		const Name = this.db.getModel('SeriesName');
 		const Series = this.db.getModel('Series');
 
-		return new Name({name: animeData.name})
+		return new Name({name: animeData.mainName})
 			.fetch()
 			.then((nameModel) => {
 				if (nameModel) {
@@ -79,7 +79,7 @@ class AnimeRegistry {
 				else {
 					return Series.forge({
 						anilistId: animeData.anilistId,
-						name: animeData.name,
+						name: animeData.mainName,
 						episodes: animeData.totalEpisodes,
 						imageUrlLge: animeData.imageUrlLge,
 						season: animeData.season || null,

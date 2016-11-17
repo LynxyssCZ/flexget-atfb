@@ -11,10 +11,15 @@ templates:
     set:
       path: '{{ secrets.tr.root }}/{{ series_name }}'
       label: 'FlexGet series - {{ series_name }}'
+    pathscrub: windows
 
   ongoings:
     include: series.yml
     thetvdb_lookup: yes
+    content_filter:
+      require:
+        - '*.mkv'
+        - '*.mp4'
     digest:
       list: daily email
       state:
@@ -71,6 +76,7 @@ tasks:
       - fix quality
       - transmission series
     discover:
+      release_estimations: ignore
       what:
         - next_series_episodes:
             from_start: yes

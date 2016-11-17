@@ -24,6 +24,7 @@ class AnilistReader {
 	}
 
 	getUserList(user, listTypes) {
+		console.log(SERVER + 'user/' + user + '/animelist');
 		return superagent.get(SERVER + 'user/' + user + '/animelist')
 			.accept('json')
 			.query({ access_token: this.accessToken })

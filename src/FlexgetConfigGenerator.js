@@ -37,6 +37,7 @@ class FlexgetConfigGenerator {
 				});
 			}
 			else {
+				console.log(err);
 				return next(err);
 			}
 		});
@@ -64,7 +65,8 @@ FlexgetConfigGenerator.baseConfig = {
 	timeframe: '6 minutes',
 	target: '720p',
 	exact: 'yes',
-	qualities: ['576p', '720p']
+	qualities: ['576p', '720p'],
+	tracking: 'backfill'
 
 };
 

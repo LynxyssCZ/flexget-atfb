@@ -22,8 +22,8 @@ const app = new ATFB({
 		apiKey: process.env.API_KEY
 	},
 	flexget: {
-		filename: path.join(__dirname, process.env.SERIES_FILE),
-		command: 'flexget daemon reload'
+		filename: path.join(__dirname, 'const',  'series.yml'),
+		command: '~/flexget/bin/flexget daemon reload'
 	}
 });
 
@@ -58,18 +58,25 @@ const start = function() {
 };
 
 function refresh() {
-	app.methods.reader.getUserList(process.env.USER, ['watching', 'plan_to_watch'])
+	app.methods.reader.getUserList(process.env.ANI_USER, ['watching', 'plan_to_watch'])
 		.then((list) => {
+			console.log(list.length);
 			Async.map(list, processAnime, (err, seriesList) => {
 				if (!err) {
-					app.methods.flexget.updateConfig(seriesList, () => {
-
+					app.methods.flexget.updateConfig(seriesList, (err) => {
+						if (err) {
+							throw err;
+						}
 					});
+				}
+				else {
+					throw err;
 				}
 			});
 		})
 		.catch((err) => {
 			log.error(err);
+			clear();
 		});
 }
 
