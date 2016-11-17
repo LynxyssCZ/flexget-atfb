@@ -35,7 +35,8 @@ class AnimeRegistry {
 				}, []);
 
 				return next(null, record);
-			}, (err) => {
+			})
+			.catch((err) => {
 				return next(err);
 			});
 	}
@@ -51,7 +52,7 @@ class AnimeRegistry {
 				seriesModel.set({
 					episodes: animeData.totalEpisodes,
 					imageUrlLge: animeData.imageUrlLge,
-					season: animeData.season,
+					season: animeData.season || 0,
 					time: animeData.updatedAt
 				});
 
@@ -82,7 +83,7 @@ class AnimeRegistry {
 						name: animeData.mainName,
 						episodes: animeData.totalEpisodes,
 						imageUrlLge: animeData.imageUrlLge,
-						season: animeData.season || null,
+						season: animeData.season || 0,
 						time: animeData.updatedAt,
 						prequelId: null
 					}).save(null, {method: 'insert'});

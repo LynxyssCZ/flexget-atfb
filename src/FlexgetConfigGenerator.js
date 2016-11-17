@@ -28,7 +28,7 @@ class FlexgetConfigGenerator {
 	}
 
 	writeConfig(seriesConfig, next) {
-		fs.writeFile(this.options.filename, Yaml.stringify(seriesConfig, 10, 2), (err) => {
+		fs.writeFile(this.options.filename, Yaml.stringify(seriesConfig, 3, 2), (err) => {
 			if (!err) {
 				Shell.exec(this.options.command, {
 					silent: true
@@ -37,7 +37,6 @@ class FlexgetConfigGenerator {
 				});
 			}
 			else {
-				console.log(err);
 				return next(err);
 			}
 		});
@@ -67,7 +66,6 @@ FlexgetConfigGenerator.baseConfig = {
 	exact: 'yes',
 	qualities: ['576p', '720p'],
 	tracking: 'backfill'
-
 };
 
 module.exports = FlexgetConfigGenerator;

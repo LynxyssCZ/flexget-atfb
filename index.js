@@ -60,7 +60,7 @@ const start = function() {
 function refresh() {
 	app.methods.reader.getUserList(process.env.ANI_USER, ['watching', 'plan_to_watch'])
 		.then((list) => {
-			console.log(list.length);
+			log.info(list.length);
 			Async.map(list, processAnime, (err, seriesList) => {
 				if (!err) {
 					app.methods.flexget.updateConfig(seriesList, (err) => {
