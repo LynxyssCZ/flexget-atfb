@@ -65,7 +65,8 @@ FlexgetConfigGenerator.baseConfig = {
 	target: '720p',
 	exact: 'yes',
 	qualities: ['576p', '720p'],
-	tracking: 'backfill'
+	tracking: 'backfill',
+	begin: 1
 };
 
 module.exports = FlexgetConfigGenerator;

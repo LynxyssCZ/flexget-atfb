@@ -14,16 +14,13 @@ templates:
     pathscrub: windows
 
   ongoings:
-    include: series.yml
+    include:
+      - series.yml
     thetvdb_lookup: yes
     content_filter:
       require:
         - '*.mkv'
         - '*.mp4'
-    digest:
-      list: daily email
-      state:
-        - accepted
 
   fix quality:
     if:
@@ -86,33 +83,10 @@ tasks:
             category: anime eng
             filter: trusted only
 
-  mail digest:
-    priority: 20
-    from_digest:
-      list: daily email
-    disable:
-      - seen
-      - seen_info_hash
-      - torrent
-    accept_all: yes
-    email:
-      from: '{{ secrets.mail.user }}'
-      to: '{{ secrets.mail.to }}'
-      smtp_host: 'smtp.mailgun.com'
-      smtp_login: true
-      smtp_username: '{{ secrets.mail.user }}'
-      smtp_password: '{{ secrets.mail.pass }}'
-      smtp_tls: true
-      template: 'series.template'
-
 schedules:
   - tasks: [fetch nyaa, fetch horrible]
     interval:
       minutes: 30
-
-  - tasks: mail digest
-    interval:
-      hours: 1
 
   - tasks: discover nyaa
     interval:
