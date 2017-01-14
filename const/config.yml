@@ -15,22 +15,22 @@ templates:
 
   ongoings:
     configure_series:
-        settings:
-            identified_by: sequence
-            upgrade: yes
-            timeframe: 6 minutes
-            target: 720p
-            qualities:
-                - 576p
-                - 720p
-            tracking: backfill
-            begin: 1
-        from:
-            my_anime_list:
-                username: '{{ secrets.mal.username }}'
-                status:
-                    - watching
-                    - plan_to_watch
+      settings:
+        identified_by: sequence
+        upgrade: yes
+        timeframe: 6 minutes
+        target: 720p
+        qualities:
+          - 576p
+          - 720p
+        tracking: backfill
+        begin: 1
+      from:
+        my_anime_list:
+          username: '{{ secrets.mal.username }}'
+          status:
+            - watching
+            - plan_to_watch
     thetvdb_lookup: yes
     content_filter:
       require:
