@@ -36,6 +36,7 @@ templates:
           values:
             title: 1
             configure_series_alternate_name: 2
+            url: 3
     thetvdb_lookup: yes
     content_filter:
       require:
