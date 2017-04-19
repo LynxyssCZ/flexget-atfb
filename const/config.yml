@@ -1,15 +1,15 @@
-secrets: secrets.yml
+variables: secrets.yml
 
 templates:
   transmission series:
     transmission:
       host: 192.168.253.52
       port: 9091
-      username: '{{ secrets.tr.usr }}'
-      password: '{{ secrets.tr.pwd }}'
+      username: '{? tr.usr ?}'
+      password: '{? tr.pwd ?}'
       path: '{{ secrets.tr.root }}'
     set:
-      path: '{{ secrets.tr.root }}/{{ series_name }}'
+      path: '{? tr.root ?}/{{ series_name }}'
       label: 'FlexGet series - {{ series_name }}'
     pathscrub: windows
 
@@ -27,7 +27,7 @@ templates:
         begin: 1
       from:
         my_anime_list:
-          username: '{{ secrets.mal.username }}'
+          username: '{? mal.username ?}'
           status:
             - watching
             - plan_to_watch
