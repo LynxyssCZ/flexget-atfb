@@ -66,14 +66,14 @@ templates:
             quality: 480p
 
 tasks:
-  fetch nyaa:
+  fetch tt:
     priority: 2
     template:
       - ongoings
       - fix quality
       - transmission series
     rss:
-      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=mkv+-horriblesubs+-1080p+-480p+-dvdrip+-%22bd%22&filter=2'
+      url: 'https://www.tokyotosho.info/rss.php?filter=1'
       all_entries: yes
 
   fetch horrible:
@@ -82,11 +82,12 @@ tasks:
       - ongoings
       - horrible quality
       - transmission series
+    seen_info_hash: no
     rss:
-      url: 'http://www.nyaa.se/?page=rss&cats=1_37&term=horriblesubs%7Cbakedfish+-1080p+-480p&filter=2'
+      url: 'http://horriblesubs.info/rss.php?res=720'
       all_entries: yes
 
-  discover nyaa:
+  discover:
     priority: 10
     template:
       - ongoings
@@ -105,14 +106,9 @@ tasks:
             filter: trusted only
 
 schedules:
-  - tasks: [fetch nyaa, fetch horrible]
+  - tasks: [fetch tt, fetch horrible]
     interval:
       minutes: 30
-
-  - tasks: discover nyaa
-    interval:
-      hours: 12
-
 
 web_server:
   bind: 0.0.0.0
